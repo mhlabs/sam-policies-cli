@@ -1,0 +1,28 @@
+{
+  "name": "sam-policies",
+  "version": "1.0.0",
+  "description": "A CLI tool to browse and inject SAM Policy Templates into your SAM template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mhdev",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "commander": "^4.1.1",
+    "fs": "0.0.1-security",
+    "inquirer": "^7.0.4",
+    "yaml-cfn": "^0.2.3"
+  },
+  "bugs": {
+    "url": "https://github.com/mhlabs/sam-policies-cli/issues"
+  },
+  "homepage": "https://github.com/mhlabs/sam-policies-cli#readme",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  },
+  "bin": {
+    "sam-policies": "index.js"
+  }
+}
