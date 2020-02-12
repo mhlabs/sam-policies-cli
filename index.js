@@ -27,7 +27,7 @@ program.parse(process.argv);
 
 const SAM_SCHEMA_URL = "https://raw.githubusercontent.com/awslabs/serverless-application-model/develop/samtranslator/policy_templates_data/policy_templates.json";
 async function run(templateFile, format) {
-  if (!fs.exists(templateFile)) {
+  if (!fs.existsSync(templateFile)) {
     console.error(`File ${templateFile} does not exist`);
     return;
   }
