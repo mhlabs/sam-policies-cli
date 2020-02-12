@@ -7,7 +7,7 @@ async function selectResource(resources) {
     await prompt({
       name: "id",
       type: "list",
-      message: `Select resource`,
+      message: `Select resource to grant access to`,
       choices: resources
     })
   ).id;
@@ -29,7 +29,7 @@ async function selectLambdaFunction(lambdas) {
   return (await prompt({
     name: "id",
     type: "list",
-    message: `Select function to apply policy to`,
+    message: `Select function to apply policy on`,
     choices: lambdas
   })).id;
 }

@@ -25,7 +25,8 @@ program
 
 program.parse(process.argv);
 
-const SAM_SCHEMA_URL = "https://raw.githubusercontent.com/awslabs/serverless-application-model/develop/samtranslator/policy_templates_data/policy_templates.json";
+const SAM_SCHEMA_URL =
+  "https://raw.githubusercontent.com/awslabs/serverless-application-model/develop/samtranslator/policy_templates_data/policy_templates.json";
 async function run(templateFile, format) {
   if (!fs.existsSync(templateFile)) {
     console.error(`File ${templateFile} does not exist`);
@@ -33,8 +34,9 @@ async function run(templateFile, format) {
   }
 
   const templateJson = fs.readFileSync(templateFile).toString();
+  let template = undefined;
   try {
-  const template = parser.parse(templateJson);
+    template = parser.parse(templateJson);
   } catch {
     console.error(`Template file could not be parsed as ${format}`);
     return;
@@ -53,14 +55,15 @@ async function run(templateFile, format) {
     )
   );
 
-  const policyTemplate = await inputHelper.selectPolicyTemplate(availableTemplates, resourceType);
+  const policyTemplate = await inputHelper.selectPolicyTemplate(
+    availableTemplates,
+    resourceType
+  );
 
   const lambda = await inputHelper.selectLambdaFunction(lambdas);
 
   const policies = template.Resources[lambda].Properties.Policies || [];
-  const parameterKeys = Object.keys(
-    policyTemplates[policyTemplate].Parameters
-  );
+  const parameterKeys = Object.keys(policyTemplates[policyTemplate].Parameters);
   const parameters = buildParameters(parameterKeys, resourceType, resourceName);
 
   injectPolicy(policyTemplate, parameters, policies, template, lambda);
@@ -91,11 +94,8 @@ function buildParameters(parameterKeys, resourceType, resourceName) {
 }
 
 function handleSAMResources(resource) {
-  if (resource.startsWith("[AWS::Serverless::Function")) 
-    return "lambda"
-    if (resource.startsWith("[AWS::Serverless::SimpleTable")) 
-    return "dynamodb"
-  
+  if (resource.startsWith("[AWS::Serverless::Function")) return "lambda";
+  if (resource.startsWith("[AWS::Serverless::SimpleTable")) return "dynamodb";
+
   return resource.split("::")[1].toLowerCase();
 }
-
