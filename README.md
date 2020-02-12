@@ -16,7 +16,7 @@ Options:
 ```
 
 ## Example
-![Demo](demo.gif)
+![Demo](https://github.com/mhlabs/sam-policies-cli/blob/master/demo.gif?raw=true)
 
 ## Caveats
 * Both JSON and YAML options will reformat your template, but especially  JSON shouldn't break it. It's therefore a good idea to run this command on a template without any local changes so you can easily diff the injection and reformatting. For safety it will create a backup of your template in <template_filename>_backup before making any changes.
