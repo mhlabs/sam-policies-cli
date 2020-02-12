@@ -20,15 +20,25 @@ program
     if (cmd.format.toLowerCase().startsWith("y")) {
       parser = YAML;
     }
-    run(cmd.template);
+    run(cmd.template, cmd.format);
   });
 
 program.parse(process.argv);
 
 const SAM_SCHEMA_URL = "https://raw.githubusercontent.com/awslabs/serverless-application-model/develop/samtranslator/policy_templates_data/policy_templates.json";
-async function run(templateFile) {
+async function run(templateFile, format) {
+  if (!fs.exists(templateFile)) {
+    console.error(`File ${templateFile} does not exist`);
+    return;
+  }
+
   const templateJson = fs.readFileSync(templateFile).toString();
+  try {
   const template = parser.parse(templateJson);
+  } catch {
+    console.error(`Template file could not be parsed as ${format}`);
+    return;
+  }
   const resources = templateParser.getFormattedResourceList(template);
   const lambdas = templateParser.getLambdaFunctions(template);
   const resource = await inputHelper.selectResource(resources);
