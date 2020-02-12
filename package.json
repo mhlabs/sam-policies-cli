@@ -1,5 +1,5 @@
 {
-  "name": "sam-policies",
+  "name": "sam-policies-cli",
   "version": "1.0.0",
   "description": "A CLI tool to browse and inject SAM Policy Templates into your SAM template",
   "main": "index.js",
