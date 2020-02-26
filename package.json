@@ -1,6 +1,6 @@
 {
   "name": "@mhlabs/sam-policies-cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A CLI tool to browse and inject SAM Policy Templates into your SAM template",
   "main": "index.js",
   "scripts": {
