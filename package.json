@@ -23,6 +23,7 @@
     "jest": "^25.1.0"
   },
   "bin": {
-    "sam-policies": "index.js"
+    "sam-policies": "index.js",
+    "sam-pol": "index.js"
   }
 }

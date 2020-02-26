@@ -7,6 +7,10 @@ CLI tool to browse and inject [AWS Policy Templates](https://docs.aws.amazon.com
 
 ## Usage
 ```
+sam-pol -t template.yaml -f yaml
+```
+
+```
 Options:
   -v, --vers                 output the current version
   -f, --format <json|yaml>   Select output format (default: "json")

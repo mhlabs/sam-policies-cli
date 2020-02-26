@@ -3,11 +3,11 @@ const fs = require("fs");
 const intrinsicFunctionsMap = require("./intrinsicFunctionMap");
 const axios = require("axios");
 const YAML = require("./yaml-wrapper");
-const program = require("commander");
 const templateParser = require("./template-parser");
 const inputHelper = require("./input-helper");
 let parser = JSON;
 
+const program = require("commander");
 program.version("1.0.0", "-v, --vers", "output the current version");
 program
   .option("-f, --format <json|yaml>", "Select output format", "json")
@@ -29,7 +29,7 @@ const SAM_SCHEMA_URL =
   "https://raw.githubusercontent.com/awslabs/serverless-application-model/develop/samtranslator/policy_templates_data/policy_templates.json";
 async function run(templateFile, format) {
   if (!fs.existsSync(templateFile)) {
-    console.error(`File ${templateFile} does not exist`);
+    console.error(`File ${templateFile} does not exist. Use sam-pol -t <template name> to parse your template.`);
     return;
   }
 
