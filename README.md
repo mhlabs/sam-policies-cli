@@ -19,6 +19,8 @@ Options:
 
 ```
 
+This is intended to set policies for Lambda functions to be allowed to integrate with resources that is managed by your template. However, sometimes you might want to create a policy for a resource that doesn't exist in your template and/or you might need to specify the resource name by wildcard or by other means. To achieve this, select `Not Templated` from the first selection list.
+
 ## Example
 ![Demo](https://github.com/mhlabs/sam-policies-cli/blob/master/demo.gif?raw=true)
 
