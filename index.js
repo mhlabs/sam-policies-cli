@@ -29,7 +29,9 @@ const SAM_SCHEMA_URL =
   "https://raw.githubusercontent.com/awslabs/serverless-application-model/develop/samtranslator/policy_templates_data/policy_templates.json";
 async function run(templateFile, format) {
   if (!fs.existsSync(templateFile)) {
-    console.error(`File ${templateFile} does not exist. Use sam-pol -t <template name> to parse your template.`);
+    console.error(
+      `File ${templateFile} does not exist. Use sam-pol -t <template name> to parse your template.`
+    );
     return;
   }
 
@@ -49,11 +51,17 @@ async function run(templateFile, format) {
   const policyTemplatesResponse = await axios.get(SAM_SCHEMA_URL);
   const policyTemplates = policyTemplatesResponse.data.Templates;
 
-  const availableTemplates = Object.keys(policyTemplates).filter(p =>
-    policyTemplates[p].Definition.Statement[0].Action[0].startsWith(
-      `${resourceType}:`
-    )
-  );
+  let availableTemplates;
+  console.log(resource);
+  if (resource !== "Not templated") {
+    availableTemplates = Object.keys(policyTemplates).filter(p =>
+      policyTemplates[p].Definition.Statement[0].Action[0].startsWith(
+        `${resourceType}:`
+      )
+    );
+  } else {
+    availableTemplates = Object.keys(policyTemplates);
+  }
 
   const policyTemplate = await inputHelper.selectPolicyTemplate(
     availableTemplates,
@@ -64,7 +72,7 @@ async function run(templateFile, format) {
 
   const policies = template.Resources[lambda].Properties.Policies || [];
   const parameterKeys = Object.keys(policyTemplates[policyTemplate].Parameters);
-  const parameters = buildParameters(parameterKeys, resourceType, resourceName);
+  const parameters = await buildParameters(parameterKeys, resourceType, resourceName);
 
   injectPolicy(policyTemplate, parameters, policies, template, lambda);
 
@@ -79,16 +87,22 @@ function injectPolicy(policyTemplate, parameters, policies, template, lambda) {
   template.Resources[lambda].Properties.Policies = policies;
 }
 
-function buildParameters(parameterKeys, resourceType, resourceName) {
-  const parameters = {};
+async function buildParameters(parameterKeys, resourceType, resourceName) {
+  let parameters = {};
   for (const parameterKey of parameterKeys) {
     const intrinsicFunctionKey = `${resourceType}:${parameterKey}`;
     const funcResponse = intrinsicFunctionsMap.get(intrinsicFunctionKey);
-    funcResponse.func.splice(1, 0, resourceName);
     parameters[parameterKey] = {};
-    const func = funcResponse.func.shift();
-    parameters[parameterKey][func] =
-      funcResponse.func.length === 1 ? funcResponse.func[0] : funcResponse.func;
+    if (resourceType === inputHelper.NOT_TEMPLATED) {
+      parameters[parameterKey] = await inputHelper.getFreeText(parameterKey);
+    } else {
+      funcResponse.func.splice(1, 0, resourceName);
+      const func = funcResponse.func.shift();
+      parameters[parameterKey][func] =
+        funcResponse.func.length === 1
+          ? funcResponse.func[0]
+          : funcResponse.func;
+    }
   }
   return parameters;
 }
@@ -96,6 +110,8 @@ function buildParameters(parameterKeys, resourceType, resourceName) {
 function handleSAMResources(resource) {
   if (resource.startsWith("[AWS::Serverless::Function")) return "lambda";
   if (resource.startsWith("[AWS::Serverless::SimpleTable")) return "dynamodb";
-
-  return resource.split("::")[1].toLowerCase();
+  if (resource.includes("::")) {
+    return resource.split("::")[1].toLowerCase();
+  }
+  return resource;
 }

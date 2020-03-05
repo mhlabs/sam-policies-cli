@@ -2,13 +2,24 @@ const inquirer = require("inquirer");
 const prompt = inquirer.createPromptModule();
 const intrinsicFunctionsMap = require("./intrinsicFunctionMap");
 
+const NOT_TEMPLATED = "Not templated";
 async function selectResource(resources) {
   return (
     await prompt({
       name: "id",
       type: "list",
       message: `Select resource to grant access to`,
-      choices: resources
+      choices: [...resources, NOT_TEMPLATED]
+    })
+  ).id;
+}
+
+async function getFreeText(resourceNameIdentifier) {
+  return (
+    await prompt({
+      name: "id",
+      type: "text",
+      message: `Enter name or wildcard (*) for parameter [${resourceNameIdentifier}]`
     })
   ).id;
 }
@@ -20,7 +31,7 @@ async function selectPolicyTemplate(availableTemplates, resourceType) {
     message: `Select policy template`,
     choices: [
       ...availableTemplates,
-      ...intrinsicFunctionsMap.getRelatedServices(resourceType)
+      ...intrinsicFunctionsMap.getRelatedServices(resourceType),      
     ]
   })).id;
 }
@@ -37,5 +48,7 @@ async function selectLambdaFunction(lambdas) {
 module.exports = {
   selectResource,
   selectPolicyTemplate,
-  selectLambdaFunction
+  selectLambdaFunction,
+  NOT_TEMPLATED,
+  getFreeText
 };

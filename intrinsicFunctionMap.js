@@ -24,6 +24,7 @@ function getRelatedServices(key) {
 }
 
 function get(key) {
+  console.log(key);
   if (!Object.keys(mapping).includes(key)) {
     return { func: "Ref", sure: false };
   }
