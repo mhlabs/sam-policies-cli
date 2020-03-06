@@ -8,7 +8,7 @@ const inputHelper = require("./input-helper");
 let parser = JSON;
 
 const program = require("commander");
-program.version("1.0.0", "-v, --vers", "output the current version");
+program.version("1.0.7", "-v, --vers", "output the current version");
 program
   .option("-f, --format <json|yaml>", "Select output format", "json")
   .option(
