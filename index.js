@@ -26,7 +26,7 @@ program
 program.parse(process.argv);
 
 const SAM_SCHEMA_URL =
-  "https://raw.githubusercontent.com/awslabs/serverless-application-model/develop/samtranslator/policy_templates_data/policy_templates.json";
+  "https://raw.githubusercontent.com/awslabs/serverless-application-model/master/samtranslator/policy_templates_data/policy_templates.json";
 async function run(templateFile, format) {
   if (!fs.existsSync(templateFile)) {
     console.error(
@@ -52,7 +52,6 @@ async function run(templateFile, format) {
   const policyTemplates = policyTemplatesResponse.data.Templates;
 
   let availableTemplates;
-  console.log(resource);
   if (resource !== "Not templated") {
     availableTemplates = Object.keys(policyTemplates).filter(p =>
       policyTemplates[p].Definition.Statement[0].Action[0].startsWith(
