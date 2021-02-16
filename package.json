@@ -9,7 +9,7 @@
   "author": "mhdev",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "commander": "^4.1.1",
     "fs": "0.0.1-security",
     "inquirer": "^7.0.4",
