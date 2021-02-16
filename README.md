@@ -13,8 +13,7 @@ sam-pol -t template.yaml -f yaml
 ```
 Options:
   -v, --vers                 output the current version
-  -f, --format <json|yaml>   Select output format (default: "json")
-  -t, --template <filename>  Template file name (default: "serverless.template")
+  -t, --template <filename>  Template file name (default: "template.yaml")
   -h, --help                 output usage information
 
 ```
