@@ -11,15 +11,8 @@ const program = require("commander");
 program.version("1.0.7", "-v, --vers", "output the current version");
 program
   .option("-f, --format <json|yaml>", "Select output format", "json")
-  .option(
-    "-t, --template <filename>",
-    "Template file name",
-    "serverless.template"
-  )
-  .action(async cmd => {
-    if (cmd.format.toLowerCase().startsWith("y")) {
-      parser = YAML;
-    }
+  .option("-t, --template <filename>", "Template file name", "template.yaml")
+  .action(async (cmd) => {
     run(cmd.template, cmd.format);
   });
 
@@ -28,6 +21,8 @@ program.parse(process.argv);
 const SAM_SCHEMA_URL =
   "https://raw.githubusercontent.com/awslabs/serverless-application-model/master/samtranslator/policy_templates_data/policy_templates.json";
 async function run(templateFile, format) {
+  let template = undefined;
+
   if (!fs.existsSync(templateFile)) {
     console.error(
       `File ${templateFile} does not exist. Use sam-pol -t <template name> to parse your template.`
@@ -36,12 +31,15 @@ async function run(templateFile, format) {
   }
 
   const templateJson = fs.readFileSync(templateFile).toString();
-  let template = undefined;
   try {
-    template = parser.parse(templateJson);
+    template = JSON.parse(templateJson);
   } catch {
-    console.error(`Template file could not be parsed as ${format}`);
-    return;
+    try {
+      template = YAML.parse(templateJson);
+    } catch {
+      console.error(`Template file could not be parsed as ${format}`);
+      return;
+    }
   }
   const resources = templateParser.getFormattedResourceList(template);
   const lambdas = templateParser.getLambdaFunctions(template);
@@ -53,13 +51,13 @@ async function run(templateFile, format) {
 
   let availableTemplates;
   if (resource !== "Not templated") {
-    availableTemplates = Object.keys(policyTemplates).filter(p =>
+    availableTemplates = Object.keys(policyTemplates).filter((p) =>
       policyTemplates[p].Definition.Statement[0].Action[0].startsWith(
         `${resourceType}:`
       )
     );
   } else {
-    availableTemplates = Object.keys(policyTemplates);
+    availableTemplates = Object.keys(policyTemplates).sort();
   }
 
   const policyTemplate = await inputHelper.selectPolicyTemplate(
@@ -71,7 +69,11 @@ async function run(templateFile, format) {
 
   const policies = template.Resources[lambda].Properties.Policies || [];
   const parameterKeys = Object.keys(policyTemplates[policyTemplate].Parameters);
-  const parameters = await buildParameters(parameterKeys, resourceType, resourceName);
+  const parameters = await buildParameters(
+    parameterKeys,
+    resourceType,
+    resourceName
+  );
 
   injectPolicy(policyTemplate, parameters, policies, template, lambda);
 
