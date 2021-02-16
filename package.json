@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/mhlabs/sam-policies-cli#readme",
   "devDependencies": {
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "node-notifier": ">=8.0.1",
+    "yargs-parser": ">=18.1.2",
+    "minimist": ">=0.2.1"
   },
   "bin": {
     "sam-policies": "index.js",
