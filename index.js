@@ -10,17 +10,16 @@ let parser = JSON;
 const program = require("commander");
 program.version("1.0.7", "-v, --vers", "output the current version");
 program
-  .option("-f, --format <json|yaml>", "Select output format", "json")
   .option("-t, --template <filename>", "Template file name", "template.yaml")
   .action(async (cmd) => {
-    run(cmd.template, cmd.format);
+    run(cmd.template);
   });
 
 program.parse(process.argv);
 
 const SAM_SCHEMA_URL =
   "https://raw.githubusercontent.com/awslabs/serverless-application-model/master/samtranslator/policy_templates_data/policy_templates.json";
-async function run(templateFile, format) {
+async function run(templateFile) {
   let template = undefined;
 
   if (!fs.existsSync(templateFile)) {
@@ -37,7 +36,7 @@ async function run(templateFile, format) {
     try {
       template = YAML.parse(templateJson);
     } catch {
-      console.error(`Template file could not be parsed as ${format}`);
+      console.error(`Template file could not be parsed as JSON or YAML`);
       return;
     }
   }
