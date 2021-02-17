@@ -35,6 +35,7 @@ async function run(templateFile) {
   } catch {
     try {
       template = YAML.parse(templateJson);
+      parser = YAML
     } catch {
       console.error(`Template file could not be parsed as JSON or YAML`);
       return;
