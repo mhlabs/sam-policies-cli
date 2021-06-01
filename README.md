@@ -1,3 +1,5 @@
+# DEPRECATED. This functionality has fully moved into [iam-policies-cli](https://github.com/mhlabs/iam-policies-cli/). We will not update this repository any further.
+
 ## sam-policies-cli
 
 CLI tool to browse and inject [AWS Policy Templates](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html) into the `Policies` array of an `AWS::Serverless::Function` in a [SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) template
